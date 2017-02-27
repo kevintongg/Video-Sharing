@@ -1,0 +1,24 @@
+{
+  "name": "cs3337",
+  "version": "1.0.0",
+  "description": "A video sharing application",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevintongg/CS3337.git"
+  },
+  "author": "Kevin Tong, Cedric Tong, Feng Le, Daniel Kale",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kevintongg/CS3337/issues"
+  },
+  "homepage": "https://github.com/kevintongg/CS3337#readme",
+  "devDependencies": {
+    "eslint": "^3.16.1",
+    "eslint-config-airbnb-base": "^11.1.0",
+    "eslint-plugin-import": "^2.2.0"
+  }
+} 

@@ -364,3 +364,5 @@ modules.xml
 *.ipr
 
 # End of https://www.gitignore.io/api/eclipse,node,jetbrains,clion,phpstorm,webstorm,codeblocks,windows,macos
+
+*.pem
