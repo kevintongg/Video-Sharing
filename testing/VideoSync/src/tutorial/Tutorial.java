@@ -86,6 +86,6 @@ public class Tutorial {
 
     frame.setContentPane(contentPane);
     frame.setVisible(true);
-    mediaPlayerComponent.getMediaPlayer().playMedia("src/tutorial/Yiruma.mp4");
+    mediaPlayerComponent.getMediaPlayer().playMedia("src/tutorial/Yiruma.ogg");
   }
 }
