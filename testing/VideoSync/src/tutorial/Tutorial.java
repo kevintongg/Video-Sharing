@@ -30,13 +30,11 @@ public class Tutorial {
 
     JMenuBar menuBar = new JMenuBar();
     JMenu menu = new JMenu("File");
-    JMenuItem menuItem;
+    JMenuItem menuItem = new JMenuItem("Choose File");
 
     menu.setMnemonic(KeyEvent.VK_F);
     menuBar.add(menu);
-
-    //a group of JMenuItems
-    menuItem = new JMenuItem("Choose File");
+    
     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK));
 
     menuItem.addActionListener(e -> {
