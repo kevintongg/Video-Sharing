@@ -1,4 +1,4 @@
-package tutorial;
+package main;
 
 import java.awt.BorderLayout;
 import java.awt.event.InputEvent;
@@ -17,13 +17,13 @@ import javax.swing.SwingUtilities;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
-public class Tutorial {
+public class VideoSharing {
 
   private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
 
   public static void main(final String[] args) {
     new NativeDiscovery().discover();
-    SwingUtilities.invokeLater(Tutorial::new);
+    SwingUtilities.invokeLater(VideoSharing::new);
   }
 
   private JMenuBar createMenuBar() {
@@ -52,7 +52,7 @@ public class Tutorial {
     return menuBar;
   }
 
-  private Tutorial() {
+  private VideoSharing() {
     JFrame frame = new JFrame("Video Sync");
     frame.setBounds(100, 100, 640, 360);
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
