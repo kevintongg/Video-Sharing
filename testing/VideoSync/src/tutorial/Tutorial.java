@@ -1,31 +1,60 @@
 package tutorial;
 
 import java.awt.BorderLayout;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 public class Tutorial {
 
-  private final JFrame frame;
   private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
-  private final JButton pauseButton;
-  private final JButton rewindButton;
-  private final JButton skipButton;
 
   public static void main(final String[] args) {
     new NativeDiscovery().discover();
     SwingUtilities.invokeLater(Tutorial::new);
   }
 
+  private JMenuBar createMenuBar() {
+
+    JMenuBar menuBar = new JMenuBar();
+    JMenu menu = new JMenu("File");
+    JMenuItem menuItem = new JMenuItem("Choose File");
+
+    menu.setMnemonic(KeyEvent.VK_F);
+    menuBar.add(menu);
+
+    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK));
+
+    menuItem.addActionListener(e -> {
+      JFileChooser fileChooser = new JFileChooser();
+      int returnValue = fileChooser.showOpenDialog(null);
+      if (returnValue == JFileChooser.APPROVE_OPTION) {
+        String file = fileChooser.getSelectedFile().getAbsolutePath();
+        System.out.println(file);
+        mediaPlayerComponent.getMediaPlayer().playMedia(file);
+      }
+    });
+
+    menu.add(menuItem);
+
+    return menuBar;
+  }
+
   private Tutorial() {
-    frame = new JFrame("Video Sync");
-    frame.setBounds(100, 100, 600, 400);
+    JFrame frame = new JFrame("Video Sync");
+    frame.setBounds(100, 100, 640, 360);
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     frame.addWindowListener(new WindowAdapter() {
       @Override
@@ -42,22 +71,41 @@ public class Tutorial {
     contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
 
     JPanel controlsPane = new JPanel();
-    pauseButton = new JButton("Pause");
-    controlsPane.add(pauseButton);
-    rewindButton = new JButton("Rewind");
+    JButton pauseButton = new JButton("Pause");
+    JButton playButton = new JButton("Play");
+    JButton rewindButton = new JButton("Rewind");
+    JButton forwardButton = new JButton("Forward");
+    JButton fileSelect = new JButton("File Select");
+
+    controlsPane.add(playButton);
+    
     controlsPane.add(rewindButton);
-    skipButton = new JButton("Skip");
-    controlsPane.add(skipButton);
+    controlsPane.add(pauseButton);
+    controlsPane.add(forwardButton);
+    controlsPane.add(fileSelect);
+
     contentPane.add(controlsPane, BorderLayout.SOUTH);
 
+    fileSelect.addActionListener(e -> {
+      JFileChooser fileChooser = new JFileChooser();
+      int returnValue = fileChooser.showOpenDialog(null);
+      if (returnValue == JFileChooser.APPROVE_OPTION) {
+        String file = fileChooser.getSelectedFile().getAbsolutePath();
+        System.out.println(file);
+        mediaPlayerComponent.getMediaPlayer().playMedia(file);
+      }
+    });
+
     pauseButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
+    
+    playButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().play());
+    
+    rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-5000));
 
-    rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-10000));
+    forwardButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(5000));
 
-    skipButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(10000));
-
+    frame.setJMenuBar(createMenuBar());
     frame.setContentPane(contentPane);
     frame.setVisible(true);
-    mediaPlayerComponent.getMediaPlayer().playMedia("tutorial/yiruma.ogg");
   }
 }
