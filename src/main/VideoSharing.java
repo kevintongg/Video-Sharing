@@ -71,33 +71,32 @@ public class VideoSharing {
     contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
 
     JPanel controlsPane = new JPanel();
-    JButton pauseButton = new JButton("Play/Pause");
+    JButton playButton = new JButton("Play");
+    JButton pauseButton = new JButton("Pause");
     JButton rewindButton = new JButton("Rewind");
-    JButton forwardButton = new JButton("Forward");
-    JButton fileSelect = new JButton("File Select");
+    JButton forward = new JButton("Forward");
+    JButton fastForward = new JButton("Fast Forward");
 
+    controlsPane.add(playButton);
     controlsPane.add(pauseButton);
     controlsPane.add(rewindButton);
-    controlsPane.add(forwardButton);
-    controlsPane.add(fileSelect);
+    controlsPane.add(forward);
+    controlsPane.add(fastForward);
 
     contentPane.add(controlsPane, BorderLayout.SOUTH);
 
-    fileSelect.addActionListener(e -> {
-      JFileChooser fileChooser = new JFileChooser();
-      int returnValue = fileChooser.showOpenDialog(null);
-      if (returnValue == JFileChooser.APPROVE_OPTION) {
-        String file = fileChooser.getSelectedFile().getAbsolutePath();
-        System.out.println(file);
-        mediaPlayerComponent.getMediaPlayer().playMedia(file);
-      }
-    });
+
+    playButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().play());
 
     pauseButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
 
     rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-5000));
 
-    forwardButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(5000));
+    forward.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(5000));
+
+    fastForward.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().setRate(2500));
+
+
 
     frame.setJMenuBar(createMenuBar());
     frame.setContentPane(contentPane);
