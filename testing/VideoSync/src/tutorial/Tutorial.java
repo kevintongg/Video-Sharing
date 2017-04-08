@@ -73,28 +73,16 @@ public class Tutorial {
     JPanel controlsPane = new JPanel();
     JButton pauseButton = new JButton("Pause");
     JButton playButton = new JButton("Play");
-    JButton rewindButton = new JButton("Rewind");
-    JButton forwardButton = new JButton("Forward");
-    JButton fileSelect = new JButton("File Select");
+    JButton rewindButton = new JButton("Rewind"); // 5 seconds backwards
+    JButton forwardButton = new JButton("Forward"); // 5 seconds forward
 
     controlsPane.add(playButton);
     
     controlsPane.add(rewindButton);
     controlsPane.add(pauseButton);
     controlsPane.add(forwardButton);
-    controlsPane.add(fileSelect);
 
     contentPane.add(controlsPane, BorderLayout.SOUTH);
-
-    fileSelect.addActionListener(e -> {
-      JFileChooser fileChooser = new JFileChooser();
-      int returnValue = fileChooser.showOpenDialog(null);
-      if (returnValue == JFileChooser.APPROVE_OPTION) {
-        String file = fileChooser.getSelectedFile().getAbsolutePath();
-        System.out.println(file);
-        mediaPlayerComponent.getMediaPlayer().playMedia(file);
-      }
-    });
 
     pauseButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
     
