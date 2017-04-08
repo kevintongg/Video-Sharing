@@ -16,6 +16,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
+import uk.co.caprica.vlcj.player.embedded.DefaultAdaptiveRuntimeFullScreenStrategy;
 
 public class Tutorial {
 
@@ -69,19 +70,22 @@ public class Tutorial {
 
     mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
     contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
+    mediaPlayerComponent.getMediaPlayer().setFullScreenStrategy(
+            new DefaultAdaptiveRuntimeFullScreenStrategy(frame)
+        );
 
     JPanel controlsPane = new JPanel();
     JButton pauseButton = new JButton("Pause");
     JButton playButton = new JButton("Play");
     JButton rewindButton = new JButton("Rewind");
     JButton forwardButton = new JButton("Forward");
-
+    JButton fullScreen = new JButton("Fullscreen");
 
     controlsPane.add(playButton);
-    
     controlsPane.add(rewindButton);
     controlsPane.add(pauseButton);
     controlsPane.add(forwardButton);
+    controlsPane.add(fullScreen);
 
 
     contentPane.add(controlsPane, BorderLayout.SOUTH);
@@ -96,8 +100,10 @@ public class Tutorial {
 
     forwardButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(5000));
 
+    fullScreen.addActionListener(e ->  mediaPlayerComponent.getMediaPlayer().toggleFullScreen());
     frame.setJMenuBar(createMenuBar());
     frame.setContentPane(contentPane);
     frame.setVisible(true);
+        
   }
 }
