@@ -2,6 +2,7 @@ package tutorial;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -73,7 +74,7 @@ public class Tutorial {
 
   private Tutorial() {
     JFrame frame = new JFrame("Video Sync");
-    frame.setBounds(100, 100, 640, 360);
+    frame.setBounds(100, 100, 720, 480);
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     frame.addWindowListener(new WindowAdapter() {
       @Override
@@ -85,7 +86,7 @@ public class Tutorial {
 
     JPanel contentPane = new JPanel();
     contentPane.setLayout(new BorderLayout());
-
+    timeLabel = new JLabel("hh:mm:ss");
     mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
     contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
     mediaPlayerComponent.getMediaPlayer()
@@ -111,15 +112,27 @@ public class Tutorial {
     positionSlider.setValue(0);
     positionSlider.setToolTipText("Position");
 
+    JPanel positionPanel = new JPanel();
+    positionPanel.setLayout(new GridLayout(1, 1));
+    positionPanel.add(positionSlider);
+
+    JPanel topPanel = new JPanel();
+    topPanel.setLayout(new BorderLayout(8, 0));
+    topPanel.setLayout(new BorderLayout(8, 0));
+
+    topPanel.add(timeLabel, BorderLayout.WEST);
+    topPanel.add(positionPanel, BorderLayout.CENTER);
+
     controlsPane.add(playButton);
     controlsPane.add(pauseButton);
     controlsPane.add(rewindButton);
     controlsPane.add(forwardButton);
     controlsPane.add(volumeSlider);
-    controlsPane.add(positionSlider);
     controlsPane.add(fullScreen);
 
     contentPane.add(controlsPane, BorderLayout.SOUTH);
+    contentPane.add(timeLabel, BorderLayout.NORTH);
+    contentPane.add(positionPanel, BorderLayout.NORTH);
 
     pauseButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
 
@@ -203,10 +216,6 @@ public class Tutorial {
         mediaPlayerComponent.getMediaPlayer().setVolume(source.getValue());
       }
     });
-  }
-
-  private void updateVolume(int value) {
-    volumeSlider.setValue(value);
   }
 
 }
