@@ -93,11 +93,11 @@ public class Tutorial {
     volumeSlider.setPreferredSize(new Dimension(100, 40));
     volumeSlider.setToolTipText("Change volume");
     
-    mediaPlayerComponent.addComponentListener(new MediaPlayerEventAdapter() {
+    /*mediaPlayerComponent.addComponentListener(new MediaPlayerEventAdapter() {
         @Override
         public void playing(MediaPlayer mediaPlayer) {
         }
-    });
+    });*/
 
     controlsPane.add(playButton);
     controlsPane.add(pauseButton);
