@@ -71,24 +71,21 @@ public class VideoSharing {
     contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
 
     JPanel controlsPane = new JPanel();
-    JButton playButton = new JButton("Play");
-    JButton pauseButton = new JButton("Pause");
+    JButton playback = new JButton("Play/Pause");
     JButton rewindButton = new JButton("Rewind");
     JButton forward = new JButton("Forward");
     JButton fastForward = new JButton("Fast Forward");
+    JButton fullScreen = new JButton("Fullscreen");
 
-    controlsPane.add(playButton);
-    controlsPane.add(pauseButton);
+    controlsPane.add(playback);
     controlsPane.add(rewindButton);
     controlsPane.add(forward);
     controlsPane.add(fastForward);
+    controlsPane.add(fullScreen);
 
     contentPane.add(controlsPane, BorderLayout.SOUTH);
 
-
-    playButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().play());
-
-    pauseButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
+    playback.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
 
     rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-5000));
 
@@ -96,8 +93,8 @@ public class VideoSharing {
 
     fastForward.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().setRate(2500));
 
-
-
+    fullScreen.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().toggleFullScreen());
+    
     frame.setJMenuBar(createMenuBar());
     frame.setContentPane(contentPane);
     frame.setVisible(true);
