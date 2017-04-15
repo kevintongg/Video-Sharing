@@ -89,8 +89,7 @@ public class Tutorial {
     timeLabel = new JLabel("hh:mm:ss");
     mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
     contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
-    mediaPlayerComponent.getMediaPlayer()
-        .setFullScreenStrategy(new DefaultAdaptiveRuntimeFullScreenStrategy(frame));
+    mediaPlayerComponent.getMediaPlayer().setFullScreenStrategy(new DefaultAdaptiveRuntimeFullScreenStrategy(frame));
 
     JPanel controlsPane = new JPanel();
     JButton pauseButton = new JButton("Pause");
@@ -162,8 +161,7 @@ public class Tutorial {
   }
 
   private void updateTime(long millis) {
-    String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-        TimeUnit.MILLISECONDS.toMinutes(millis)
+    String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),TimeUnit.MILLISECONDS.toMinutes(millis)
             - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
         TimeUnit.MILLISECONDS.toSeconds(millis)
             - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
