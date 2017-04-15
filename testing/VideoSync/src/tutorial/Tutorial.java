@@ -4,11 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -22,14 +27,16 @@ import javax.swing.event.ChangeListener;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
-import uk.co.caprica.vlcj.player.Equalizer;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
-import uk.co.caprica.vlcj.player.MediaPlayerFactory;
+import uk.co.caprica.vlcj.player.embedded.DefaultAdaptiveRuntimeFullScreenStrategy;
 
 public class Tutorial {
 
 	private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
+	private JSlider positionSlider;
+	private JLabel timeLabel;
+	private boolean mousePressedPlaying = false;
 	private JSlider volumeSlider;
 
 	public static void main(final String[] args) {
@@ -81,12 +88,15 @@ public class Tutorial {
 
 		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
 		contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
+		mediaPlayerComponent.getMediaPlayer()
+				.setFullScreenStrategy(new DefaultAdaptiveRuntimeFullScreenStrategy(frame));
 
 		JPanel controlsPane = new JPanel();
 		JButton pauseButton = new JButton("Pause");
 		JButton playButton = new JButton("Play");
 		JButton rewindButton = new JButton("Rewind"); // 5 seconds backwards
 		JButton forwardButton = new JButton("Forward"); // 5 seconds forward
+		JButton fullScreen = new JButton("Fullscreen");
 
 		volumeSlider = new JSlider();
 		volumeSlider.setOrientation(JSlider.HORIZONTAL);
@@ -95,11 +105,19 @@ public class Tutorial {
 		volumeSlider.setPreferredSize(new Dimension(100, 40));
 		volumeSlider.setToolTipText("Change volume");
 
+		positionSlider = new JSlider();
+		positionSlider.setMinimum(0);
+		positionSlider.setMaximum(1000);
+		positionSlider.setValue(0);
+		positionSlider.setToolTipText("Position");
+
 		controlsPane.add(playButton);
 		controlsPane.add(pauseButton);
 		controlsPane.add(rewindButton);
 		controlsPane.add(forwardButton);
 		controlsPane.add(volumeSlider);
+		controlsPane.add(positionSlider);
+		controlsPane.add(fullScreen);
 
 		contentPane.add(controlsPane, BorderLayout.SOUTH);
 
@@ -111,26 +129,80 @@ public class Tutorial {
 
 		forwardButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(5000));
 
+		fullScreen.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().toggleFullScreen());
 		frame.setJMenuBar(createMenuBar());
 		frame.setContentPane(contentPane);
 		frame.setVisible(true);
+
+	}
+
+	private void setSliderBasedPosition() {
+		if (!mediaPlayerComponent.getMediaPlayer().isSeekable()) {
+			return;
+		}
+		float positionValue = positionSlider.getValue() / 1000.0f;
+		// Avoid end of file freeze-up
+		if (positionValue > 0.99f) {
+			positionValue = 0.99f;
+		}
+		mediaPlayerComponent.getMediaPlayer().setPosition(positionValue);
+	}
+
+	private void updateTime(long millis) {
+		String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+				TimeUnit.MILLISECONDS.toMinutes(millis)
+						- TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+				TimeUnit.MILLISECONDS.toSeconds(millis)
+						- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+		timeLabel.setText(s);
+	}
+
+	private void updatePosition(int value) {
+		// positionProgressBar.setValue(value);
+		positionSlider.setValue(value);
+	}
+
+	private void updateUI() {
+		long time = mediaPlayerComponent.getMediaPlayer().getTime();
+		int position = (int) (mediaPlayerComponent.getMediaPlayer().getPosition() * 1000.0f);
+		updateTime(time);
+		updatePosition(position);
 	}
 
 	private void registerListeners() {
 		mediaPlayerComponent.getMediaPlayer().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
 			@Override
 			public void playing(MediaPlayer mediaPlayer) {
-				//updateVolume(mediaPlayer.getVolume());
+				// updateVolume(mediaPlayer.getVolume());
 			}
 		});
-		
-	    volumeSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                JSlider source = (JSlider)e.getSource();
-                mediaPlayerComponent.updateVolume(source.getValue());
-            }
-        });
+
+		positionSlider.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (mediaPlayerComponent.getMediaPlayer().isPlaying()) {
+					mousePressedPlaying = true;
+					mediaPlayerComponent.getMediaPlayer().pause();
+				} else {
+					mousePressedPlaying = false;
+				}
+				setSliderBasedPosition();
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				setSliderBasedPosition();
+				updateUI();
+			}
+		});
+
+		volumeSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				mediaPlayerComponent.setVolume(source.getValue());
+			}
+		});
 	}
 
 	private void updateVolume(int value) {
