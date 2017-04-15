@@ -77,9 +77,9 @@ public class Tutorial {
     JButton forwardButton = new JButton("Forward"); // 5 seconds forward
 
     controlsPane.add(playButton);
-    controlsPane.add(pauseButton);
-    controlsPane.add(rewindButton);
     
+    controlsPane.add(rewindButton);
+    controlsPane.add(pauseButton);
     controlsPane.add(forwardButton);
 
     contentPane.add(controlsPane, BorderLayout.SOUTH);
