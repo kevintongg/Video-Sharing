@@ -1,14 +1,22 @@
 package tutorial;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -16,16 +24,24 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
 
+import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
+import uk.co.caprica.vlcj.filter.swing.SwingFileFilterFactory;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.embedded.DefaultAdaptiveRuntimeFullScreenStrategy;
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class Tutorial {
 
@@ -69,7 +85,7 @@ public class Tutorial {
 
 	private Tutorial() {
 		JFrame frame = new JFrame("Video Sync");
-		frame.setBounds(100, 100, 640, 360);
+		frame.setBounds(100, 100, 720, 480);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
@@ -81,7 +97,7 @@ public class Tutorial {
 
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
-
+		timeLabel = new JLabel("hh:mm:ss");
 		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
 		contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
 		mediaPlayerComponent.getMediaPlayer()
@@ -99,15 +115,28 @@ public class Tutorial {
 		positionSlider.setMaximum(1000);
 		positionSlider.setValue(0);
 		positionSlider.setToolTipText("Position");
+		
+        JPanel positionPanel = new JPanel();
+        positionPanel.setLayout(new GridLayout(1, 1));
+        positionPanel.add(positionSlider);
+
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout(8, 0));
+        topPanel.setLayout(new BorderLayout(8, 0));
+
+        topPanel.add(timeLabel, BorderLayout.WEST);
+        topPanel.add(positionPanel, BorderLayout.CENTER);
+
 
 		controlsPane.add(playButton);
 		controlsPane.add(rewindButton);
 		controlsPane.add(pauseButton);
 		controlsPane.add(forwardButton);
 		controlsPane.add(fullScreen);
-		controlsPane.add(positionSlider);
 
 		contentPane.add(controlsPane, BorderLayout.SOUTH);
+        contentPane.add(timeLabel, BorderLayout.NORTH);
+        contentPane.add(positionPanel, BorderLayout.NORTH);
 
 		pauseButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
 
@@ -129,7 +158,6 @@ public class Tutorial {
 			return;
 		}
 		float positionValue = positionSlider.getValue() / 1000.0f;
-		// Avoid end of file freeze-up
 		if (positionValue > 0.99f) {
 			positionValue = 0.99f;
 		}
@@ -146,7 +174,6 @@ public class Tutorial {
 	}
 
 	private void updatePosition(int value) {
-		// positionProgressBar.setValue(value);
 		positionSlider.setValue(value);
 	}
 
