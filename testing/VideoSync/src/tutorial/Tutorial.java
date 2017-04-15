@@ -28,109 +28,113 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
 public class Tutorial {
-	
-  private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
-  private JSlider volumeSlider;
-  public static void main(final String[] args) {
-    new NativeDiscovery().discover();
-    SwingUtilities.invokeLater(Tutorial::new);
-  }
 
-  private JMenuBar createMenuBar() {
+	private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
+	private JSlider volumeSlider;
 
-    JMenuBar menuBar = new JMenuBar();
-    JMenu menu = new JMenu("File");
-    JMenuItem menuItem = new JMenuItem("Choose File");
+	public static void main(final String[] args) {
+		new NativeDiscovery().discover();
+		SwingUtilities.invokeLater(Tutorial::new);
+	}
 
-    menu.setMnemonic(KeyEvent.VK_F);
-    menuBar.add(menu);
+	private JMenuBar createMenuBar() {
 
-    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK));
+		registerListeners();
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("File");
+		JMenuItem menuItem = new JMenuItem("Choose File");
 
-    menuItem.addActionListener(e -> {
-      JFileChooser fileChooser = new JFileChooser();
-      int returnValue = fileChooser.showOpenDialog(null);
-      if (returnValue == JFileChooser.APPROVE_OPTION) {
-        String file = fileChooser.getSelectedFile().getAbsolutePath();
-        System.out.println(file);
-        mediaPlayerComponent.getMediaPlayer().playMedia(file);
-      }
-    });
+		menu.setMnemonic(KeyEvent.VK_F);
+		menuBar.add(menu);
 
-    menu.add(menuItem);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK));
 
-    return menuBar;
-  }
+		menuItem.addActionListener(e -> {
+			JFileChooser fileChooser = new JFileChooser();
+			int returnValue = fileChooser.showOpenDialog(null);
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				String file = fileChooser.getSelectedFile().getAbsolutePath();
+				System.out.println(file);
+				mediaPlayerComponent.getMediaPlayer().playMedia(file);
+			}
+		});
 
-  private Tutorial() {
-    JFrame frame = new JFrame("Video Sync");
-    frame.setBounds(100, 100, 640, 360);
-    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-    frame.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        mediaPlayerComponent.release();
-        System.exit(0);
-      }
-    });
+		menu.add(menuItem);
 
-    JPanel contentPane = new JPanel();
-    contentPane.setLayout(new BorderLayout());
+		return menuBar;
+	}
 
-    mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
-    contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
+	private Tutorial() {
+		JFrame frame = new JFrame("Video Sync");
+		frame.setBounds(100, 100, 640, 360);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				mediaPlayerComponent.release();
+				System.exit(0);
+			}
+		});
 
-    JPanel controlsPane = new JPanel();
-    JButton pauseButton = new JButton("Pause");
-    JButton playButton = new JButton("Play");
-    JButton rewindButton = new JButton("Rewind"); // 5 seconds backwards
-    JButton forwardButton = new JButton("Forward"); // 5 seconds forward
-    
-    volumeSlider = new JSlider();
-    volumeSlider.setOrientation(JSlider.HORIZONTAL);
-    volumeSlider.setMinimum(LibVlcConst.MIN_VOLUME);
-    volumeSlider.setMaximum(LibVlcConst.MAX_VOLUME);
-    volumeSlider.setPreferredSize(new Dimension(100, 40));
-    volumeSlider.setToolTipText("Change volume");
-    
-    /*mediaPlayerComponent.addComponentListener(new MediaPlayerEventAdapter() {
-        @Override
-        public void playing(MediaPlayer mediaPlayer) {
-        }
-    });*/
+		JPanel contentPane = new JPanel();
+		contentPane.setLayout(new BorderLayout());
 
-    controlsPane.add(playButton);
-    controlsPane.add(pauseButton);
-    controlsPane.add(rewindButton);
-    
-    controlsPane.add(forwardButton);
-    controlsPane.add(volumeSlider);
+		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
+		contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
 
-    contentPane.add(controlsPane, BorderLayout.SOUTH);
+		JPanel controlsPane = new JPanel();
+		JButton pauseButton = new JButton("Pause");
+		JButton playButton = new JButton("Play");
+		JButton rewindButton = new JButton("Rewind"); // 5 seconds backwards
+		JButton forwardButton = new JButton("Forward"); // 5 seconds forward
 
-    pauseButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
-    
-    playButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().play());
-    
-    rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-5000));
+		volumeSlider = new JSlider();
+		volumeSlider.setOrientation(JSlider.HORIZONTAL);
+		volumeSlider.setMinimum(LibVlcConst.MIN_VOLUME);
+		volumeSlider.setMaximum(LibVlcConst.MAX_VOLUME);
+		volumeSlider.setPreferredSize(new Dimension(100, 40));
+		volumeSlider.setToolTipText("Change volume");
 
-    forwardButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(5000));
-    
-    volumeSlider.addChangeListener(new ChangeListener() {
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            JSlider source = (JSlider)e.getSource();
-           mediaPlayerComponent.setVolume(source.getValue());
-        }
-    });
-    
+		controlsPane.add(playButton);
+		controlsPane.add(pauseButton);
+		controlsPane.add(rewindButton);
+		controlsPane.add(forwardButton);
+		controlsPane.add(volumeSlider);
 
-    frame.setJMenuBar(createMenuBar());
-    frame.setContentPane(contentPane);
-    frame.setVisible(true);
-  }
-  private void setVolume(int value) {
-      volumeSlider.setValue(value);
-  }
+		contentPane.add(controlsPane, BorderLayout.SOUTH);
+
+		pauseButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
+
+		playButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().play());
+
+		rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-5000));
+
+		forwardButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(5000));
+
+		frame.setJMenuBar(createMenuBar());
+		frame.setContentPane(contentPane);
+		frame.setVisible(true);
+	}
+
+	private void registerListeners() {
+		mediaPlayerComponent.getMediaPlayer().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+			@Override
+			public void playing(MediaPlayer mediaPlayer) {
+				//updateVolume(mediaPlayer.getVolume());
+			}
+		});
+		
+	    volumeSlider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSlider source = (JSlider)e.getSource();
+                mediaPlayerComponent.updateVolume(source.getValue());
+            }
+        });
+	}
+
+	private void updateVolume(int value) {
+		volumeSlider.setValue(value);
+	}
 
 }
