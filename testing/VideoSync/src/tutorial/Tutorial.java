@@ -89,11 +89,11 @@ public class Tutorial {
     timeLabel = new JLabel("hh:mm:ss");
     mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
     contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
-    mediaPlayerComponent.getMediaPlayer().setFullScreenStrategy(new DefaultAdaptiveRuntimeFullScreenStrategy(frame));
+    mediaPlayerComponent.getMediaPlayer()
+        .setFullScreenStrategy(new DefaultAdaptiveRuntimeFullScreenStrategy(frame));
 
     JPanel controlsPane = new JPanel();
-    JButton pauseButton = new JButton("Pause");
-    JButton playButton = new JButton("Play");
+    JButton playbackButton = new JButton("Play/Pause");
     JButton rewindButton = new JButton("Rewind"); // 5 seconds backwards
     JButton forwardButton = new JButton("Forward"); // 5 seconds forward
     JButton fullScreen = new JButton("Fullscreen");
@@ -122,20 +122,17 @@ public class Tutorial {
     topPanel.add(timeLabel, BorderLayout.WEST);
     topPanel.add(positionPanel, BorderLayout.CENTER);
 
-    controlsPane.add(playButton);
-    controlsPane.add(pauseButton);
+    controlsPane.add(playbackButton);
     controlsPane.add(rewindButton);
     controlsPane.add(forwardButton);
-    controlsPane.add(volumeSlider);
     controlsPane.add(fullScreen);
+    controlsPane.add(volumeSlider);
 
     contentPane.add(controlsPane, BorderLayout.SOUTH);
     contentPane.add(timeLabel, BorderLayout.NORTH);
     contentPane.add(positionPanel, BorderLayout.NORTH);
 
-    pauseButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
-
-    playButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().play());
+    playbackButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
 
     rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-5000));
 
@@ -161,10 +158,11 @@ public class Tutorial {
   }
 
   private void updateTime(long millis) {
-    String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),TimeUnit.MILLISECONDS.toMinutes(millis)
-            - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-        TimeUnit.MILLISECONDS.toSeconds(millis)
-            - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+    String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+        TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS
+            .toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+        TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES
+            .toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
     timeLabel.setText(s);
   }
 
@@ -181,12 +179,13 @@ public class Tutorial {
   }
 
   private void registerListeners() {
-    mediaPlayerComponent.getMediaPlayer().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
-      @Override
-      public void playing(MediaPlayer mediaPlayer) {
-        // updateVolume(mediaPlayer.getVolume());
-      }
-    });
+    mediaPlayerComponent.getMediaPlayer()
+        .addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+          @Override
+          public void playing(MediaPlayer mediaPlayer) {
+            // updateVolume(mediaPlayer.getVolume());
+          }
+        });
 
     positionSlider.addMouseListener(new MouseAdapter() {
       @Override
@@ -207,13 +206,9 @@ public class Tutorial {
       }
     });
 
-    volumeSlider.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        JSlider source = (JSlider) e.getSource();
-        mediaPlayerComponent.getMediaPlayer().setVolume(source.getValue());
-      }
+    volumeSlider.addChangeListener(e -> {
+      JSlider source = (JSlider) e.getSource();
+      mediaPlayerComponent.getMediaPlayer().setVolume(source.getValue());
     });
   }
-
 }
