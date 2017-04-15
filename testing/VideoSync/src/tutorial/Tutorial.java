@@ -200,7 +200,7 @@ public class Tutorial {
       @Override
       public void stateChanged(ChangeEvent e) {
         JSlider source = (JSlider) e.getSource();
-        mediaPlayerComponent.setVolume(source.getValue());
+        mediaPlayerComponent.getMediaPlayer().setVolume(source.getValue());
       }
     });
   }
