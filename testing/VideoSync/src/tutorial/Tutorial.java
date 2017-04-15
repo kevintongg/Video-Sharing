@@ -77,7 +77,6 @@ public class Tutorial {
     JButton forwardButton = new JButton("Forward"); // 5 seconds forward
 
     controlsPane.add(playButton);
-    
     controlsPane.add(rewindButton);
     controlsPane.add(pauseButton);
     controlsPane.add(forwardButton);
@@ -85,9 +84,9 @@ public class Tutorial {
     contentPane.add(controlsPane, BorderLayout.SOUTH);
 
     pauseButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().pause());
-    
+
     playButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().play());
-    
+
     rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-5000));
 
     forwardButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(5000));
