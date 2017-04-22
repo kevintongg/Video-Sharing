@@ -74,7 +74,7 @@ public class Tutorial {
 
   private Tutorial() {
     JFrame frame = new JFrame("Video Sync");
-    frame.setBounds(100, 100, 1280, 720);
+    frame.setBounds(100, 100, 1080, 720);
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     frame.addWindowListener(new WindowAdapter() {
       @Override
