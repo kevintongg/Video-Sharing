@@ -32,8 +32,8 @@ public class VideoPlayer {
 
   private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
   private JSlider positionSlider;
-  private JLabel timeLabel;
   private boolean mousePressedPlaying = false;
+  private JLabel timeLabel;
   private JSlider volumeSlider;
 
   public static void main(final String[] args) {
@@ -167,9 +167,7 @@ public class VideoPlayer {
   }
 
   private void updateUI() {
-    long time = mediaPlayerComponent.getMediaPlayer().getTime();
     int position = (int) (mediaPlayerComponent.getMediaPlayer().getPosition() * 1000.0f);
-    updateTime(time);
     updatePosition(position);
   }
 
@@ -185,12 +183,6 @@ public class VideoPlayer {
     positionSlider.addMouseListener(new MouseAdapter() {
       @Override
       public void mousePressed(MouseEvent e) {
-        if (mediaPlayerComponent.getMediaPlayer().isPlaying()) {
-          mousePressedPlaying = true;
-          mediaPlayerComponent.getMediaPlayer().pause();
-        } else {
-          mousePressedPlaying = false;
-        }
         setSliderBasedPosition();
       }
 
