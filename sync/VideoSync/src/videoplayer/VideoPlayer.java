@@ -9,8 +9,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.concurrent.TimeUnit;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -33,9 +31,6 @@ public class VideoPlayer {
 
   private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
   private JSlider positionSlider;
-
-  private JLabel timeLabel;
-
   private JSlider volumeSlider;
   public static void main(final String[] args) {
     new NativeDiscovery().discover();
