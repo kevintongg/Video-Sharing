@@ -1,4 +1,4 @@
-package tutorial;
+package videoplayer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -30,7 +30,7 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.embedded.DefaultAdaptiveRuntimeFullScreenStrategy;
 
-public class Tutorial {
+public class VideoPlayer {
 
   private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
   private JSlider positionSlider;
@@ -40,7 +40,7 @@ public class Tutorial {
 
   public static void main(final String[] args) {
     new NativeDiscovery().discover();
-    SwingUtilities.invokeLater(Tutorial::new);
+    SwingUtilities.invokeLater(VideoPlayer::new);
 
   }
 
@@ -71,7 +71,7 @@ public class Tutorial {
     return menuBar;
   }
 
-  private Tutorial() {
+  private VideoPlayer() {
     JFrame frame = new JFrame("Video Sync");
     frame.setBounds(100, 100, 1066, 720);
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
