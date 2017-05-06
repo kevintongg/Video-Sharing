@@ -9,6 +9,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -31,11 +33,9 @@ public class VideoPlayer {
 
   private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
   private JSlider positionSlider;
-<<<<<<< HEAD
+
   private JLabel timeLabel;
-  private boolean mousePressedPlaying = false;
-=======
->>>>>>> master
+
   private JSlider volumeSlider;
   public static void main(final String[] args) {
     new NativeDiscovery().discover();
@@ -152,28 +152,14 @@ public class VideoPlayer {
     }
     mediaPlayerComponent.getMediaPlayer().setPosition(positionValue);
   }
-
-<<<<<<< HEAD
-  private void updateTime(long millis) {
-    String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-        TimeUnit.MILLISECONDS.toMinutes(millis)
-            - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-        TimeUnit.MILLISECONDS.toSeconds(millis)
-            - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-    timeLabel.setText(s);
-  }
-=======
->>>>>>> master
-
+  
   private void updatePosition(int value) {
     // positionProgressBar.setValue(value);
     positionSlider.setValue(value);
   }
 
   private void updateUI() {
-    long time = mediaPlayerComponent.getMediaPlayer().getTime();
     int position = (int) (mediaPlayerComponent.getMediaPlayer().getPosition() * 1000.0f);
-    updateTime(time);
     updatePosition(position);
   }
 
@@ -189,12 +175,6 @@ public class VideoPlayer {
     positionSlider.addMouseListener(new MouseAdapter() {
       @Override
       public void mousePressed(MouseEvent e) {
-        if (mediaPlayerComponent.getMediaPlayer().isPlaying()) {
-          mousePressedPlaying = true;
-          mediaPlayerComponent.getMediaPlayer().pause();
-        } else {
-          mousePressedPlaying = false;
-        }
         setSliderBasedPosition();
       }
 

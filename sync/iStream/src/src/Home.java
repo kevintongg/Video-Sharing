@@ -11,10 +11,6 @@ import java.net.Socket;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> master
 public class Home extends javax.swing.JFrame {
 
   /**
