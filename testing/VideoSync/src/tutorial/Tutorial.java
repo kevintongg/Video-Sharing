@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.concurrent.TimeUnit;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -18,14 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
@@ -41,38 +36,38 @@ public class Tutorial {
   private boolean mousePressedPlaying = false;
   private JSlider volumeSlider;
 
-	public static void main(final String[] args) {
-		new NativeDiscovery().discover();
-		SwingUtilities.invokeLater(Tutorial::new);
+  public static void main(final String[] args) {
+    new NativeDiscovery().discover();
+    SwingUtilities.invokeLater(Tutorial::new);
 
-	}
+  }
+
+  private JMenuBar createMenuBar() {
 
     registerListeners();
     JMenuBar menuBar = new JMenuBar();
     JMenu menu = new JMenu("File");
     JMenuItem menuItem = new JMenuItem("Choose File");
 
-		registerListeners();
-		JMenuBar menuBar = new JMenuBar();
-		JMenu menu = new JMenu("File");
-		JMenuItem menuItem = new JMenuItem("Choose File");
+    menu.setMnemonic(KeyEvent.VK_F);
+    menuBar.add(menu);
 
-		menu.setMnemonic(KeyEvent.VK_F);
-		menuBar.add(menu);
+    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK));
 
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK));
+    menuItem.addActionListener(e -> {
+      JFileChooser fileChooser = new JFileChooser();
+      int returnValue = fileChooser.showOpenDialog(null);
+      if (returnValue == JFileChooser.APPROVE_OPTION) {
+        String file = fileChooser.getSelectedFile().getAbsolutePath();
+        System.out.println(file);
+        mediaPlayerComponent.getMediaPlayer().playMedia(file);
+      }
+    });
 
-		menuItem.addActionListener(e -> {
-			JFileChooser fileChooser = new JFileChooser();
-			int returnValue = fileChooser.showOpenDialog(null);
-			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				String file = fileChooser.getSelectedFile().getAbsolutePath();
-				System.out.println(file);
-				mediaPlayerComponent.getMediaPlayer().playMedia(file);
-			}
-		});
+    menu.add(menuItem);
 
-		menu.add(menuItem);
+    return menuBar;
+  }
 
   private Tutorial() {
     JFrame frame = new JFrame("Video Sync");
@@ -138,11 +133,11 @@ public class Tutorial {
 
     rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-5000));
 
-		controlsPane.add(playButton);
-		controlsPane.add(rewindButton);
-		controlsPane.add(pauseButton);
-		controlsPane.add(forwardButton);
-		controlsPane.add(fullScreen);
+    controlsPane.add(playbackButton);
+    controlsPane.add(rewindButton);
+    controlsPane.add(playbackButton);
+    controlsPane.add(forwardButton);
+    controlsPane.add(fullScreen);
 
     fullScreen.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().toggleFullScreen());
     frame.setJMenuBar(createMenuBar());
