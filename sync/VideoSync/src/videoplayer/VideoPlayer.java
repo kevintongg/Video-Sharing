@@ -32,6 +32,7 @@ public class VideoPlayer {
   private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
   private JSlider positionSlider;
   private JSlider volumeSlider;
+
   public static void main(final String[] args) {
     new NativeDiscovery().discover();
     SwingUtilities.invokeLater(VideoPlayer::new);
@@ -147,7 +148,7 @@ public class VideoPlayer {
     }
     mediaPlayerComponent.getMediaPlayer().setPosition(positionValue);
   }
-  
+
   private void updatePosition(int value) {
     // positionProgressBar.setValue(value);
     positionSlider.setValue(value);
