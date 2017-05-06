@@ -37,7 +37,6 @@ public class VideoPlayer {
   private JLabel timeLabel;
   private boolean mousePressedPlaying = false;
   private JSlider volumeSlider;
-
   public static void main(final String[] args) {
     new NativeDiscovery().discover();
     SwingUtilities.invokeLater(VideoPlayer::new);

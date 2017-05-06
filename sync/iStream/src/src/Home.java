@@ -15,10 +15,7 @@ import java.net.Socket;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Ishan
- */
+
 public class Home extends javax.swing.JFrame {
 
   /**
