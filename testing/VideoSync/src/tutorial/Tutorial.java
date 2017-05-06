@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.KeyStroke;
@@ -40,37 +41,38 @@ public class Tutorial {
   private boolean mousePressedPlaying = false;
   private JSlider volumeSlider;
 
-  public static void main(final String[] args) {
-    new NativeDiscovery().discover();
-    SwingUtilities.invokeLater(Tutorial::new);
-  }
+	public static void main(final String[] args) {
+		new NativeDiscovery().discover();
+		SwingUtilities.invokeLater(Tutorial::new);
 
-  private JMenuBar createMenuBar() {
+	}
 
     registerListeners();
     JMenuBar menuBar = new JMenuBar();
     JMenu menu = new JMenu("File");
     JMenuItem menuItem = new JMenuItem("Choose File");
 
-    menu.setMnemonic(KeyEvent.VK_F);
-    menuBar.add(menu);
+		registerListeners();
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("File");
+		JMenuItem menuItem = new JMenuItem("Choose File");
 
-    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK));
+		menu.setMnemonic(KeyEvent.VK_F);
+		menuBar.add(menu);
 
-    menuItem.addActionListener(e -> {
-      JFileChooser fileChooser = new JFileChooser();
-      int returnValue = fileChooser.showOpenDialog(null);
-      if (returnValue == JFileChooser.APPROVE_OPTION) {
-        String file = fileChooser.getSelectedFile().getAbsolutePath();
-        System.out.println(file);
-        mediaPlayerComponent.getMediaPlayer().playMedia(file);
-      }
-    });
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK));
 
-    menu.add(menuItem);
+		menuItem.addActionListener(e -> {
+			JFileChooser fileChooser = new JFileChooser();
+			int returnValue = fileChooser.showOpenDialog(null);
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				String file = fileChooser.getSelectedFile().getAbsolutePath();
+				System.out.println(file);
+				mediaPlayerComponent.getMediaPlayer().playMedia(file);
+			}
+		});
 
-    return menuBar;
-  }
+		menu.add(menuItem);
 
   private Tutorial() {
     JFrame frame = new JFrame("Video Sync");
@@ -136,7 +138,11 @@ public class Tutorial {
 
     rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-5000));
 
-    forwardButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(5000));
+		controlsPane.add(playButton);
+		controlsPane.add(rewindButton);
+		controlsPane.add(pauseButton);
+		controlsPane.add(forwardButton);
+		controlsPane.add(fullScreen);
 
     fullScreen.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().toggleFullScreen());
     frame.setJMenuBar(createMenuBar());
