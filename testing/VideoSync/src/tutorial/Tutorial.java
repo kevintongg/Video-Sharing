@@ -133,12 +133,6 @@ public class Tutorial {
 
     rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-5000));
 
-    controlsPane.add(playbackButton);
-    controlsPane.add(rewindButton);
-    controlsPane.add(playbackButton);
-    controlsPane.add(forwardButton);
-    controlsPane.add(fullScreen);
-
     fullScreen.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().toggleFullScreen());
     frame.setJMenuBar(createMenuBar());
     frame.setContentPane(contentPane);
