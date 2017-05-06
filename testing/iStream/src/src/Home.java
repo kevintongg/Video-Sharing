@@ -177,7 +177,6 @@ public class Home extends javax.swing.JFrame {
             Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
             while (isStart) {
               ServerSocket soc = new ServerSocket(socketNumber);
-              JOptionPane.showMessageDialog(null, "Using port: " + socketNumber);
               Socket so = soc.accept();
               BufferedImage img = rob.createScreenCapture(
                   new Rectangle(0, 0, (int) d.getWidth(), (int) d.getHeight()));
