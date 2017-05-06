@@ -69,21 +69,13 @@ public class Home extends javax.swing.JFrame {
     jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A,
         java.awt.event.InputEvent.CTRL_MASK));
     jMenuItem1.setText("Ask for Screen/ Stop Screen Stream");
-    jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem1ActionPerformed(evt);
-      }
-    });
+    jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
     jMenu1.add(jMenuItem1);
 
     jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S,
         java.awt.event.InputEvent.CTRL_MASK));
     jMenuItem2.setText("Start/ Stop Server");
-    jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem2ActionPerformed(evt);
-      }
-    });
+    jMenuItem2.addActionListener(this::jMenuItem2ActionPerformed);
     jMenu1.add(jMenuItem2);
 
     jMenuBar1.add(jMenu1);
@@ -115,28 +107,24 @@ public class Home extends javax.swing.JFrame {
       int port = Integer.parseInt(JOptionPane.showInputDialog("Enter port to connect to"));
       if (ip != null && !ip.equals("")) {
         isStartStream = true;
-        new Thread(new Runnable() {
+        new Thread(() -> {
+          try {
+            while (isStartStream) {
+              Socket soc = new Socket(ip, port);
+              BufferedImage img = ImageIO.read(soc.getInputStream());
+              jPanel2.getGraphics().drawImage(img, 0, 0, jPanel2.getWidth(), jPanel2.getHeight(),
+                  null);
+              soc.close();
 
-          @Override
-          public void run() {
-            try {
-              while (isStartStream) {
-                Socket soc = new Socket(ip, port);
-                BufferedImage img = ImageIO.read(soc.getInputStream());
-                jPanel2.getGraphics().drawImage(img, 0, 0, jPanel2.getWidth(), jPanel2.getHeight(),
-                    null);
-                soc.close();
-
-                try {
-                  Thread.sleep(10);
-                } catch (Exception e) {
-                }
+              try {
+                Thread.sleep(10);
+              } catch (Exception e) {
               }
-            } catch (Exception e) {
-              JOptionPane.showMessageDialog(null, e);
             }
-            isStartStream = false;
+          } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
           }
+          isStartStream = false;
         }).start();
       } else {
         JOptionPane.showMessageDialog(null, "Please enter a valid ip address.");
@@ -157,33 +145,30 @@ public class Home extends javax.swing.JFrame {
     if (!isStart) {
       int socketNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter a valid port to use."));
       isStart = true;
-      new Thread(new Runnable() {
-        @Override
-        public void run() {
-          try {
-            Robot rob = new Robot();
-            Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-            while (isStart) {
-              ServerSocket soc = new ServerSocket(socketNumber);
-              Socket so = soc.accept();
-              BufferedImage img = rob.createScreenCapture(
-                  new Rectangle(0, 0, (int) d.getWidth(), (int) d.getHeight()));
+      new Thread(() -> {
+        try {
+          Robot rob = new Robot();
+          Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+          while (isStart) {
+            ServerSocket soc = new ServerSocket(socketNumber);
+            Socket so = soc.accept();
+            BufferedImage img = rob.createScreenCapture(
+                new Rectangle(0, 0, (int) d.getWidth(), (int) d.getHeight()));
 
-              ByteArrayOutputStream ous = new ByteArrayOutputStream();
-              ImageIO.write(img, "png", ous);
-              so.getOutputStream().write(ous.toByteArray());
-              soc.close();
-              try {
-                Thread.sleep(10);
-              } catch (Exception e) {
-              }
+            ByteArrayOutputStream ous = new ByteArrayOutputStream();
+            ImageIO.write(img, "png", ous);
+            so.getOutputStream().write(ous.toByteArray());
+            soc.close();
+            try {
+              Thread.sleep(10);
+            } catch (Exception e) {
             }
-          } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
           }
-          isStart = false;
+        } catch (Exception e) {
+          e.printStackTrace();
+          JOptionPane.showMessageDialog(null, e);
         }
+        isStart = false;
       }).start();
       JOptionPane.showMessageDialog(this, "Server Started.");
     } else {
@@ -204,27 +189,14 @@ public class Home extends javax.swing.JFrame {
           break;
         }
       }
-    } catch (ClassNotFoundException ex) {
-      java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE,
-          null, ex);
-    } catch (InstantiationException ex) {
-      java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE,
-          null, ex);
-    } catch (IllegalAccessException ex) {
-      java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE,
-          null, ex);
-    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+    } catch (ClassNotFoundException | javax.swing.UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException ex) {
       java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE,
           null, ex);
     }
     // </editor-fold>
 
     /* Create and display the form */
-    java.awt.EventQueue.invokeLater(new Runnable() {
-      public void run() {
-        new Home().setVisible(true);
-      }
-    });
+    java.awt.EventQueue.invokeLater(() -> new Home().setVisible(true));
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables

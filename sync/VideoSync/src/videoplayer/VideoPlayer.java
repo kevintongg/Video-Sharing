@@ -9,8 +9,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.concurrent.TimeUnit;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -22,7 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
@@ -34,7 +31,6 @@ public class VideoPlayer {
 
   private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
   private JSlider positionSlider;
-  private JLabel timeLabel;
   private JSlider volumeSlider;
 
   public static void main(final String[] args) {
@@ -84,7 +80,7 @@ public class VideoPlayer {
 
     JPanel contentPane = new JPanel();
     contentPane.setLayout(new BorderLayout());
-    timeLabel = new JLabel("hh:mm:ss");
+    JLabel timeLabel = new JLabel("hh:mm:ss");
     mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
     contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
     mediaPlayerComponent.getMediaPlayer()
@@ -152,7 +148,6 @@ public class VideoPlayer {
     }
     mediaPlayerComponent.getMediaPlayer().setPosition(positionValue);
   }
-
 
 
   private void updatePosition(int value) {
