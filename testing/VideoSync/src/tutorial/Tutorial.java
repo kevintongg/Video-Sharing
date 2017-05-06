@@ -22,8 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
@@ -43,6 +41,7 @@ public class Tutorial {
   public static void main(final String[] args) {
     new NativeDiscovery().discover();
     SwingUtilities.invokeLater(Tutorial::new);
+
   }
 
   private JMenuBar createMenuBar() {
@@ -136,8 +135,6 @@ public class Tutorial {
 
     rewindButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(-5000));
 
-    forwardButton.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().skip(5000));
-
     fullScreen.addActionListener(e -> mediaPlayerComponent.getMediaPlayer().toggleFullScreen());
     frame.setJMenuBar(createMenuBar());
     frame.setContentPane(contentPane);
@@ -159,10 +156,10 @@ public class Tutorial {
 
   private void updateTime(long millis) {
     String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-        TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS
-            .toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-        TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES
-            .toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+        TimeUnit.MILLISECONDS.toMinutes(millis)
+            - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+        TimeUnit.MILLISECONDS.toSeconds(millis)
+            - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
     timeLabel.setText(s);
   }
 
