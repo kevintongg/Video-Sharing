@@ -5,10 +5,10 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>iStream</name>
             <source-roots>
-                <root id="src.dir"/>
+                <root id="streaming.dir"/>
             </source-roots>
             <test-roots>
-                <root id="test.src.dir"/>
+                <root id="test.streaming.dir"/>
             </test-roots>
         </data>
         <libraries xmlns="http://www.netbeans.org/ns/ant-project-libraries/1">

@@ -1,4 +1,4 @@
-package src;
+package streaming;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -13,16 +13,12 @@ import javax.swing.JOptionPane;
 
 public class Home extends javax.swing.JFrame {
 
-  /**
-   * Creates new form Home
-   */
-  public Home() {
+  private Home() {
     initComponents();
     setLocationRelativeTo(this);
   }
 
   @SuppressWarnings("unchecked")
-  // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
     jPanel1 = new javax.swing.JPanel();
@@ -39,43 +35,38 @@ public class Home extends javax.swing.JFrame {
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
-        jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 806,
-            Short.MAX_VALUE));
+        jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 806, Short.MAX_VALUE));
     jPanel2Layout.setVerticalGroup(
-        jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 486,
-            Short.MAX_VALUE));
+        jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 486, Short.MAX_VALUE));
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
-    jPanel1Layout
-        .setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-                    jPanel1Layout.createSequentialGroup().addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
-                            javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap()));
-    jPanel1Layout
-        .setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(
-                    jPanel1Layout.createSequentialGroup().addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
-                            javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap()));
+    jPanel1Layout.setHorizontalGroup(
+        jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                jPanel1Layout.createSequentialGroup().addContainerGap()
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addContainerGap()));
+    jPanel1Layout.setVerticalGroup(
+        jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup().addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addContainerGap()));
 
     jMenu1.setText("Connect");
 
-    jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A,
-        java.awt.event.InputEvent.CTRL_MASK));
+    jMenuItem1.setAccelerator(javax.swing.KeyStroke
+        .getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
     jMenuItem1.setText("Ask for Screen/ Stop Screen Stream");
-    jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
+    jMenuItem1.addActionListener(evt -> jMenuItem1ActionPerformed());
     jMenu1.add(jMenuItem1);
 
-    jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S,
-        java.awt.event.InputEvent.CTRL_MASK));
+    jMenuItem2.setAccelerator(javax.swing.KeyStroke
+        .getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
     jMenuItem2.setText("Start/ Stop Server");
-    jMenuItem2.addActionListener(this::jMenuItem2ActionPerformed);
+    jMenuItem2.addActionListener(evt -> jMenuItem2ActionPerformed());
     jMenu1.add(jMenuItem2);
 
     jMenuBar1.add(jMenu1);
@@ -94,31 +85,32 @@ public class Home extends javax.swing.JFrame {
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-  boolean isStartStream = false;
+  private boolean isStartStream = false;
 
-  private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem1ActionPerformed
+  private void jMenuItem1ActionPerformed() {
+
     if (isStart) {
-      JOptionPane.showMessageDialog(this,
-          "If you want to ask to screen, you must stop your server.");
+      JOptionPane
+          .showMessageDialog(this,
+              "If you want to ask to screen share, you must first stop your server.");
       return;
     }
     if (!isStartStream) {
-      String ip = JOptionPane.showInputDialog("Enter ip address to connect to");
-      int port = Integer.parseInt(JOptionPane.showInputDialog("Enter port to connect to"));
+      String ip = JOptionPane.showInputDialog("Enter an IP address to connect to");
+      int port = Integer.parseInt(JOptionPane.showInputDialog("Enter a port to connect to"));
       if (ip != null && !ip.equals("")) {
         isStartStream = true;
         new Thread(() -> {
           try {
             while (isStartStream) {
-              Socket soc = new Socket(ip, port);
-              BufferedImage img = ImageIO.read(soc.getInputStream());
-              jPanel2.getGraphics().drawImage(img, 0, 0, jPanel2.getWidth(), jPanel2.getHeight(),
-                  null);
-              soc.close();
-
+              Socket socket = new Socket(ip, port);
+              BufferedImage img = ImageIO.read(socket.getInputStream());
+              jPanel2.getGraphics()
+                  .drawImage(img, 0, 0, jPanel2.getWidth(), jPanel2.getHeight(), null);
+              socket.close();
               try {
                 Thread.sleep(10);
-              } catch (Exception e) {
+              } catch (Exception ignored) {
               }
             }
           } catch (Exception e) {
@@ -132,36 +124,36 @@ public class Home extends javax.swing.JFrame {
     } else {
       isStartStream = false;
     }
-  }// GEN-LAST:event_jMenuItem1ActionPerformed
+  }
 
-  boolean isStart = false;
+  private boolean isStart = false;
 
-  private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem2ActionPerformed
+  private void jMenuItem2ActionPerformed() {
     if (isStartStream) {
       JOptionPane.showMessageDialog(this,
-          "If you want to start a server. You must stop watching other's screen.");
+          "If you want to start a server, you must stop watching the other screen.");
       return;
     }
     if (!isStart) {
-      int socketNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter a valid port to use."));
+      int socketNumber = Integer
+          .parseInt(JOptionPane.showInputDialog("Enter a valid port to use."));
       isStart = true;
       new Thread(() -> {
         try {
-          Robot rob = new Robot();
+          Robot robot = new Robot();
           Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
           while (isStart) {
-            ServerSocket soc = new ServerSocket(socketNumber);
-            Socket so = soc.accept();
-            BufferedImage img = rob.createScreenCapture(
-                new Rectangle(0, 0, (int) d.getWidth(), (int) d.getHeight()));
-
-            ByteArrayOutputStream ous = new ByteArrayOutputStream();
-            ImageIO.write(img, "png", ous);
-            so.getOutputStream().write(ous.toByteArray());
-            soc.close();
+            ServerSocket serverSocket = new ServerSocket(socketNumber);
+            Socket socket = serverSocket.accept();
+            BufferedImage img = robot
+                .createScreenCapture(new Rectangle(0, 0, (int) d.getWidth(), (int) d.getHeight()));
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(img, "png", byteArrayOutputStream);
+            socket.getOutputStream().write(byteArrayOutputStream.toByteArray());
+            serverSocket.close();
             try {
               Thread.sleep(10);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
           }
         } catch (Exception e) {
@@ -190,21 +182,20 @@ public class Home extends javax.swing.JFrame {
         }
       }
     } catch (ClassNotFoundException | javax.swing.UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException ex) {
-      java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE,
-          null, ex);
+      java.util.logging.Logger.getLogger(Home.class.getName())
+          .log(java.util.logging.Level.SEVERE, null, ex);
     }
-    // </editor-fold>
 
     /* Create and display the form */
     java.awt.EventQueue.invokeLater(() -> new Home().setVisible(true));
   }
 
-  // Variables declaration - do not modify//GEN-BEGIN:variables
+  // Variables declaration - do not modify
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JMenuItem jMenuItem1;
   private javax.swing.JMenuItem jMenuItem2;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
-  // End of variables declaration//GEN-END:variables
+  // End of variables declaration
 }
